@@ -40,8 +40,8 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
     public void onNext(T t) {
         if(t instanceof ResBase){
             ResBase base = (ResBase)t;
-            if (base.state != 1) {//非成功
-                this.onUserError(new CommonException(new UserException(base.code,base.msg,base)));
+            if (base.message==null) {//非成功
+                this.onUserError(new CommonException(new UserException(base.code,base.message,base)));
             }else {//if(base.state == 1)
                 this.onUserSuccess(t);
             }
@@ -71,13 +71,6 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 /**
                  * 2.非法异常处理：2.1 强制重新登录 2.2 校验错误 2.3 so on
                  */
-                InvalidException commonException = (InvalidException) e;
-                if(InvalidException.FLAG_ERROR_RESPONCE_CHECK.equals(commonException.getCode())){//校验错误
-                    onCheckNgisFailed(context,commonException);
-                }
-                else if(InvalidException.FLAG_ERROR_RELOGIN.equals(commonException.getCode())){//重新登录
-                    showDialog(context,commonException.getMsg());
-                }
             } else if (e instanceof JsonParseException
                     || e instanceof JSONException
                     || e instanceof ParseException) {

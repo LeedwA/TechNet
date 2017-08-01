@@ -15,23 +15,23 @@ public class CommonException extends Exception {
 
     //通常的异常
     public static final String FLAG_UNKNOWN = "1001";//异常
-    public static final String FLAG_NET_ERROR = "1002";//网络异常标志
-    public static final String FLAG_NET_TIME_OUT = "10021";//网络异常标志
+    public static final String FLAG_NET_ERROR =" 1002";//网络异常标志
+    public static final String FLAG_NET_TIME_OUT =" 10021";//网络异常标志
     public static final String FLAG_PARSE_ERROR = "1003";//解析异常
-    public static final String FLAG_PERMISSION_ERROR = "1004";//权限异常
+    public static final String FLAG_PERMISSION_ERROR ="1004";//权限异常
 
 
-    public static Map<String,String> exApiMaps = new HashMap<>();
+    public static Map<String, String> exApiMaps = new HashMap<>();
 
-    static{
-        exApiMaps.put(FLAG_NET_ERROR, "请求超时");
+    static {
+        exApiMaps.put(FLAG_NET_ERROR, "请求失败");
         exApiMaps.put(FLAG_PARSE_ERROR, "解析异常");
         exApiMaps.put(FLAG_PERMISSION_ERROR, "未许可相关权限");
         exApiMaps.put(FLAG_UNKNOWN, "未标记的异常");
     }
 
-    private String code = "";
-    private String msg ="";
+    private String code;
+    private String msg = "";
     private ResBase resObj;
     private boolean isDoNothing;
 
@@ -52,7 +52,7 @@ public class CommonException extends Exception {
 //    }
 
     public CommonException(UserException e) {
-        this(e,e.getCode());
+        this(e, e.getCode());
         this.msg = e.getMsg();
         this.resObj = e.getResObj();
     }
@@ -75,10 +75,10 @@ public class CommonException extends Exception {
 
     public String getMsg() {
         String reMsg = "";
-        if(!TextUtils.isEmpty(msg)){
+        if (!TextUtils.isEmpty(msg)) {
             reMsg = msg;
-        }else if(TextUtils.isEmpty(msg)&&!TextUtils.isEmpty(code)){
-            reMsg =  exApiMaps.get(code);
+        } else if (TextUtils.isEmpty(msg)) {
+            reMsg = "内部错误";
         }
         return reMsg;
     }

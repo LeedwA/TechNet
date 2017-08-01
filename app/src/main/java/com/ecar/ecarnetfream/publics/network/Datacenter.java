@@ -26,23 +26,21 @@ import android.os.Environment;
 
 import com.ecar.ecarnetfream.login.entity.ResLogin;
 import com.ecar.ecarnetfream.publics.network.api.ApiService;
-import com.ecar.ecarnetfream.publics.util.MD5Util;
 import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetwork.bean.ResBase;
 import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.UserException;
 import com.ecar.ecarnetwork.util.major.Major;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Observable;
-import rx.Subscriber;
 
 
 public class Datacenter {
@@ -58,34 +56,26 @@ public class Datacenter {
             datacenter = new Datacenter();
         }
         if (apiService == null) {
-            apiService = ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url);
+            apiService = ApiBox.getInstance().createService(ApiService.class, "http://115.159.123.33:9000");
         }
         return datacenter;
     }
 
     public Observable<ResLogin> login(String mobileno, String pwd) {
-        Observable<TreeMap<String, String>> treeMapObservable = Observable.create(new Observable.OnSubscribe<TreeMap<String, String>>() {
-            @Override
-            public void call(Subscriber<? super TreeMap<String, String>> subscriber) {
-                TreeMap<String, String> tMap = Major.getTreeMapNoneKey();
-                tMap.put(Major.PARAMS_USER_PHONE_NAME, mobileno);
-                tMap.put("userPwd", MD5Util.to32Md5(pwd));
-                tMap.put(Major.PARAMS_METHOD, "appLogin");
-                /**
-                 * 获得加密的sign TreeMap
-                 */
-                TreeMap<String, String> reMap = Major.securityKeyMethodEnc(tMap);
-                subscriber.onNext(reMap);
-            }
-        });
 
-        TreeMap<String, String> treeMap = treeMapObservable.toBlocking().first();
+//        HashMap<String, String> tMap = new HashMap<>();
+//        tMap.put("account", "18923729010");
+//        tMap.put("deviceId", "90DB4A6EF8A019917099234374C0CEA4");
+//        tMap.put("password", "123456");
+//        tMap.put("sign", "8E8032844B9E66C73F128F95EB3830F2DE61FF29");
 
         /**
          * 代理类调用方法获取Observable
          */
-        Observable<ResLogin> observable = apiService.login(treeMap);//ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
+//        Observable<ResLogin> observable = apiService.login(tMap);//ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
 //        ApiBox.getInstance().cancleAllRequest();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson((new ResLogin()).build()));
+        Observable<ResLogin> observable = apiService.createSubject(body);//ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
 
         return observable;
     }
@@ -96,16 +86,12 @@ public class Datacenter {
 
     public Observable<ResBase> uploadPic(String path) {
         // 添加参数到集合
-        TreeMap<String, String> tMap = Major.getTreeMapByV();
-        tMap.put(Major.PARAMS_METHOD, "upLoadImgForApp");
-        tMap.put(Major.PARAMS_MODULE, "sys");
-        tMap.put(Major.PARAMS_SERVICE, "File");
+        HashMap<String, String> tMap = Major.getDefaultMap();
         tMap.put("img_type", "png");
 
         /**
          * 加密treeMap
          */
-        TreeMap<String, String> reMap = Major.securityKeyMethodEnc(tMap);
 
         Map<String, RequestBody> partMap = new HashMap<>();
         //post 请求体
@@ -120,6 +106,6 @@ public class Datacenter {
          */
         RequestBody fileOne = RequestBody.create(MediaType.parse("image/png"), file);//"这里是模拟文件的内容"
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("content", "1467362758050.png", fileOne);
-        return apiService.uploadPic(HttpUrl.Base_Url_upClient, reMap, filePart);
+        return apiService.uploadPic(HttpUrl.Base_Url_upClient, tMap, filePart);
     }
 }

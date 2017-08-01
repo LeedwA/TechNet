@@ -23,19 +23,4 @@ import com.ecar.ecarnetwork.util.major.Major;
 public class InvalidUtil {
 
 
-    /**
-     * 验证是否符合sign规则
-     *
-     * @param
-     * @return true 符合sign规则
-     */
-    public static boolean checkSign(String sign,String content) {
-        return Major.eUtil.checkSign(sign,content,ConstantsLib.REQUEST_KEY);
-    }
-
-
-
-
-
-
 }

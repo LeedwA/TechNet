@@ -1,18 +1,20 @@
 package com.ecar.ecarnetfream.publics.network.api;
 
 
-
-
 import com.ecar.ecarnetfream.login.entity.ResLogin;
 import com.ecar.ecarnetwork.bean.ResBase;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -39,12 +41,17 @@ public interface ApiService {
     /**
      * 获取登录的信息
      */
-    @GET(".")
-    Observable<ResLogin> login(@QueryMap TreeMap<String, String> map);
+    @POST("/app/robot/login")
+    Observable<ResLogin> login(@QueryMap HashMap<String, String> map);
+    /**
+     * 获取登录的信息
+     */
+    @POST("/mobile/api/subject")
+    Observable<ResLogin> createSubject(@Body RequestBody use);
 
     @Multipart
     @POST("")
-    Observable<ResBase> uploadPic(@Url String url, @QueryMap TreeMap<String, String> map, @Part MultipartBody.Part file);
+    Observable<ResBase> uploadPic(@Url String url, @QueryMap HashMap<String, String> map, @Part MultipartBody.Part file);
 
 }
 

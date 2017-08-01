@@ -5,7 +5,7 @@ import com.ecar.ecarnetwork.bean.ResBase;
 /**
  * Created by Administrator on 2016/10/14 0014.
  */
-public class BaseException extends RuntimeException{
+public class BaseException extends RuntimeException {
 
     protected static final String DEFAULT_CODE = "-1";
     protected String code;

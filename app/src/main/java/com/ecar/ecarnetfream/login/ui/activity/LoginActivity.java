@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.ecar.ecarnetfream.R;
+import com.ecar.ecarnetfream.login.entity.ResLogin;
 import com.ecar.ecarnetfream.login.interfaces.LoginContract;
 import com.ecar.ecarnetfream.login.model.LoginModel;
 import com.ecar.ecarnetfream.login.presenter.LoginPresenter;
@@ -20,7 +22,7 @@ import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetfream.publics.view.prompt.UpdateDialog;
 import com.ecar.ecarnetwork.bean.ResBase;
 import com.ecar.ecarnetwork.db.SettingPreferences;
-import com.ecar.factory.EncryptionUtilFactory;
+import com.google.gson.Gson;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -50,7 +52,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void initView() {
-
+        Log.d("tagutil", "initView: " + new Gson().toJson((new ResLogin()).build()));
     }
 
     @Override
@@ -61,7 +63,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void loginSuccess(ResBase resBase) {
-        showMsg(resBase.msg);
+        showMsg(resBase.message);
     }
 
     @Override

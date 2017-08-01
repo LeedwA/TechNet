@@ -17,10 +17,7 @@ public class InvalidException extends BaseException {
     public static final String FLAG_ERROR_RELOGIN = "2000";
     public static final String FLAG_ERROR_RESPONCE_CHECK = "2001";
 
-    public static Map<String,String> exComMaps = new HashMap<>();
     static{
-        exComMaps.put(FLAG_ERROR_RELOGIN, "登录过期，请重新登录");
-        exComMaps.put(FLAG_ERROR_RESPONCE_CHECK, "数据校验失败,请重新操作");
     }
 
     public InvalidException(String code, String msg, ResBase resObj) {
@@ -29,12 +26,6 @@ public class InvalidException extends BaseException {
 
     @Override
     public String getMsg() {
-        String reMsg = msg;
-        if(!TextUtils.isEmpty(code)){
-            reMsg = exComMaps.get(code);
-        }else {
-            reMsg = "";
-        }
-        return reMsg;
+        return "InvalidException";
     }
 }

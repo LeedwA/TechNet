@@ -16,6 +16,7 @@ import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.exception.UserException;
 import com.ecar.ecarnetwork.util.rx.RxUtils;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -64,20 +65,19 @@ public class LoginPresenter extends LoginContract.Presenter {
 
             @Override
             protected void onUserSuccess(ResBase resBase) {
-                view.showMsg("单个请求" + resBase.msg);
+                view.showMsg("单个请求success" + resBase.message);
             }
 
-            /**
-             * 第三方 返回校验失败
-             * @param context
-             * @param commonException
-             */
             @Override
-            protected void onCheckNgisFailed(Context context, InvalidException commonException) {
-                super.onCheckNgisFailed(context, commonException);
-                if (commonException.getResObj() != null) {
-                    ResBase resBase = commonException.getResObj();
-                }
+            protected void onUserError(CommonException ex) {
+                super.onUserError(ex);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                e.printStackTrace();
+                view.showMsg("请求失败了" + e.toString());
             }
 
             @Override
@@ -88,23 +88,21 @@ public class LoginPresenter extends LoginContract.Presenter {
 ////                }catch (Exception e){
 //                    ex.printStackTrace();
             }
-    }
+        };
 
-    ;
+        //一个请求（登录）
+        Subscription subscribe = Datacenter.get().login(name, pwd).compose(RxUtils.getScheduler(true, view)).subscribe(subscriber);
 
-    //一个请求（登录）
-    Subscription subscribe = Datacenter.get().login(name, pwd).compose(RxUtils.getScheduler(true, view)).subscribe(subscriber);
         rxManage.add(subscribe);//添加到订阅集合中
 
-
-}
+    }
 
     private void rxLogin3(String name, String pwd) {
         //1.订阅者 泛型：最终想要获取的数据类型
         BaseSubscriber<ResBase> subscriber = new BaseSubscriber<ResBase>(context, view) {
             @Override
             protected void onUserSuccess(ResBase resBase) {
-                view.showMsg(resBase.msg);
+                view.showMsg(resBase.message);
             }
         };
 
@@ -117,7 +115,7 @@ public class LoginPresenter extends LoginContract.Presenter {
                 /**
                  * 此处会出错，还在子线程中. 执行前需要先指定观察的线程位置,即login(xx,xx)后面的observeOn
                  */
-                view.showMsg("链式请求第一个响应" + resLogin.msg);
+                view.showMsg("链式请求第一个响应" + resLogin.message);
 //                view.loginSuccess(resLogin);//使用 当前获得的数据。区别于map 改变数据的操作
             }
         }).flatMap(new Func1<ResLogin, Observable<ResBase>>() {

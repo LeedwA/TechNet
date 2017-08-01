@@ -9,7 +9,6 @@ import com.ecar.ecarnetwork.http.util.ConstantsLib;
 import com.ecar.ecarnetwork.http.util.HttpsUtils;
 import com.ecar.ecarnetwork.http.util.NetWorkUtil;
 import com.ecar.ecarnetwork.util.major.Major;
-import com.ecar.util.TagUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -203,9 +202,7 @@ public class ApiBox {
                 ConstantsLib.DEBUG = this.debug;
                 ConstantsLib.VeriNgis = this.veriNgis;
                 ConstantsLib.REQUEST_KEY = this.reqKey;
-                TagUtil.IS_SHOW_LOG=this.debug;
             }
-            ConstantsLib.APP_ID = Major.eUtil.binstrToStr(TextUtils.isEmpty(appId)?"":appId);
 
             return SingletonHolder.INSTANCE;
         }
