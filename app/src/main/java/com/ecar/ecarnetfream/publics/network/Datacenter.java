@@ -41,6 +41,8 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 public class Datacenter {
@@ -76,8 +78,7 @@ public class Datacenter {
 //        ApiBox.getInstance().cancleAllRequest();
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson((new ResLogin()).build()));
         Observable<ResLogin> observable = apiService.createSubject(body);//ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
-
-        return observable;
+        return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<ResLogin> sign(String name, String pass) {
