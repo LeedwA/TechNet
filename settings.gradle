@@ -1,1 +1,1 @@
-include ':app', ':zigenet'
+include ':app', ':technet'

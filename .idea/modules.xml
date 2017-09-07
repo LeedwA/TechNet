@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EcarNetFream.iml" filepath="$PROJECT_DIR$/EcarNetFream.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TechNet.iml" filepath="$PROJECT_DIR$/TechNet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/ecarnet/ecarnet.iml" filepath="$PROJECT_DIR$/ecarnet/ecarnet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/technet/technet.iml" filepath="$PROJECT_DIR$/technet/technet.iml" />
       <module fileurl="file://$PROJECT_DIR$/zigenet/zigenet.iml" filepath="$PROJECT_DIR$/zigenet/zigenet.iml" />
     </modules>
   </component>
