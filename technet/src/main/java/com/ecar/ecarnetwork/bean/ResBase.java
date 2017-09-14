@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class ResBase implements Serializable {
 
-    @SerializedName("msg")
+    @SerializedName("message")
     public String msg;// 错误信息
 
     @SerializedName("sign")
