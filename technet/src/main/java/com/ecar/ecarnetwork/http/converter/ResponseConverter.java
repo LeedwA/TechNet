@@ -61,8 +61,8 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
             /**
              * 保存utv
              */
-            if (base == null || TextUtils.isEmpty(base.message)) {//非成功
-                throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, base.message, base);
+            if (base == null) {//非成功
+                throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
             }
         } finally {
             value.close();

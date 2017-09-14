@@ -11,8 +11,19 @@ import java.io.Serializable;
  */
 public class ResBase implements Serializable {
 
-    public String message;// 错误信息
+    @SerializedName("msg")
+    public String msg;// 错误信息
 
-    public String code;// 返回的结果code
+    @SerializedName("sign")
+    public String sign;// 簽名
+
+    @SerializedName("code")
+    public String code;// 返回编号
+
+    @SerializedName("totalpage")
+    public String totalpage;// 总页数
+
+    @SerializedName("result")
+    public boolean isSucess;// 是否请求成功
 
 }

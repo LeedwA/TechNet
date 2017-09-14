@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.ecar.ecarnetfream.R;
@@ -63,7 +62,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void loginSuccess(ResBase resBase) {
-        showMsg(resBase.message);
+        showMsg(resBase.msg);
     }
 
     @Override

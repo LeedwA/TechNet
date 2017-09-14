@@ -2,7 +2,6 @@ package com.ecar.ecarnetfream.login.presenter;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetfream.login.entity.ResLogin;
@@ -12,11 +11,9 @@ import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetwork.base.BaseSubscriber;
 import com.ecar.ecarnetwork.bean.ResBase;
 import com.ecar.ecarnetwork.http.exception.CommonException;
-import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.exception.UserException;
 import com.ecar.ecarnetwork.util.rx.RxUtils;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -65,7 +62,7 @@ public class LoginPresenter extends LoginContract.Presenter {
 
             @Override
             protected void onUserSuccess(ResBase resBase) {
-                view.showMsg("单个请求success" + resBase.message);
+                view.showMsg("单个请求success" + resBase.msg);
             }
 
             @Override
@@ -101,7 +98,7 @@ public class LoginPresenter extends LoginContract.Presenter {
         BaseSubscriber<ResBase> subscriber = new BaseSubscriber<ResBase>(context, view) {
             @Override
             protected void onUserSuccess(ResBase resBase) {
-                view.showMsg(resBase.message);
+                view.showMsg(resBase.msg);
             }
         };
 
@@ -114,7 +111,7 @@ public class LoginPresenter extends LoginContract.Presenter {
                 /**
                  * 此处会出错，还在子线程中. 执行前需要先指定观察的线程位置,即login(xx,xx)后面的observeOn
                  */
-                view.showMsg("链式请求第一个响应" + resLogin.message);
+                view.showMsg("链式请求第一个响应" + resLogin.msg);
 //                view.loginSuccess(resLogin);//使用 当前获得的数据。区别于map 改变数据的操作
             }
         }).flatMap(new Func1<ResLogin, Observable<ResBase>>() {
