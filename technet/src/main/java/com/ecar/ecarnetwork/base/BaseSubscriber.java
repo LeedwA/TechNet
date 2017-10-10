@@ -59,6 +59,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
+        e.printStackTrace();
         CommonException ex = null;
         try {
             if (e instanceof UserException) {   // 用户自定义需要处理的异常
