@@ -57,6 +57,7 @@ public class ApiBox {
     private static final String CACHE_NAME = "cache";   //缓存目录名称
 
 
+
     /**
      * 单例 持有引用
      */

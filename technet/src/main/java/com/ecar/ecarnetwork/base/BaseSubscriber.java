@@ -21,6 +21,9 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import rx.Subscriber;
+import rxbus.ecaray.com.rxbuslib.rxbus.RxBus;
+
+import static com.ecar.ecarnetwork.http.exception.CommonException.USER_RELOGIN;
 
 
 /**
@@ -41,10 +44,17 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
     public void onNext(T t) {
         if (t instanceof ResBase) {
             ResBase base = (ResBase) t;
-            if (!base.isSucess) {//非成功
-                this.onUserError(new CommonException(new UserException(base.code, base.msg, base)));
-            } else {//if(base.state == 1)
-                this.onUserSuccess(t);
+            if (base != null) {
+                if (!base.isSucess) {//非成功
+                    this.onUserError(new CommonException(new UserException(base.code, base.msg, base)));
+                } else {//if(base.state == 1)
+                    this.onUserSuccess(t);
+                }
+                if (!TextUtils.isEmpty(base.code) && base.code.equals("503")) {  //重复登录
+                    RxBus.getDefault().post(USER_RELOGIN);
+                }
+            } else {
+                this.onUserError(new CommonException(new UserException("接口请求失败")));
             }
         } else {
             this.onOtherNext(t);
