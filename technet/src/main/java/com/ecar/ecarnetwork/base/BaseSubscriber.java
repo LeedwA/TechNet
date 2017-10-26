@@ -54,7 +54,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                     RxBus.getDefault().post(USER_RELOGIN);
                 }
             } else {
-                this.onUserError(new CommonException(new UserException("接口请求失败")));
+                this.onUserError(new CommonException(new UserException("请求服务器失败")));
             }
         } else {
             this.onOtherNext(t);

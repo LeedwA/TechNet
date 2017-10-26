@@ -27,7 +27,7 @@ dependencies {
     }
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile('com.github.TopTech666:TechRxbus:latest.release') {
+    provided('com.github.TopTech666:TechRxbus:latest.release') {
         exclude group: "io.reactivex", module: "rxjava"
     }
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'

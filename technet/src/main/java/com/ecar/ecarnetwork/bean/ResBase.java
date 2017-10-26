@@ -23,6 +23,9 @@ public class ResBase implements Serializable {
     @SerializedName("totalpage")
     public String totalpage;// 总页数
 
+    @SerializedName("TotalCount")
+    public int totalCount;//列表总数
+
     @SerializedName("result")
     public boolean isSucess;// 是否请求成功
 
