@@ -5,6 +5,7 @@ import android.net.ParseException;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetwork.bean.ResBase;
+import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.exception.UserException;
@@ -115,6 +116,9 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                  * 5.未知错误
                  */
                 ex = new CommonException(e, CommonException.FLAG_UNKNOWN);
+                if (!ConstantsLib.DEBUG) {
+                    ex.setDoNothing(true);
+                }
                 onUnifiedError(ex);   //未知错误
             }
             resetContext();
