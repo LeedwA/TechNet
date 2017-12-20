@@ -35,6 +35,11 @@ public class CommonException extends Exception {
     }
 
     private String code;
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     private String msg = "";
     private ResBase resObj;
     private boolean isDoNothing;

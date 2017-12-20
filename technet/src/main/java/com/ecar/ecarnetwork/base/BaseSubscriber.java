@@ -118,6 +118,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 ex = new CommonException(e, CommonException.FLAG_UNKNOWN);
                 if (!ConstantsLib.DEBUG) {
                     ex.setDoNothing(true);
+                    ex.setMsg("");
                 }
                 onUnifiedError(ex);   //未知错误
             }
