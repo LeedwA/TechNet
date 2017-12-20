@@ -3,6 +3,7 @@ package com.ecar.ecarnetwork.http.exception;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetwork.bean.ResBase;
+import com.ecar.ecarnetwork.http.util.ConstantsLib;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class CommonException extends Exception {
         if (!TextUtils.isEmpty(msg)) {
             reMsg = msg;
         } else if (TextUtils.isEmpty(msg)) {
-            reMsg = "内部错误";
+            reMsg = ConstantsLib.DEBUG? "内部错误":"";
         }
         return reMsg;
     }
