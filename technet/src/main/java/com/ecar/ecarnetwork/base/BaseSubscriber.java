@@ -46,12 +46,12 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
         if (t instanceof ResBase) {
             ResBase base = (ResBase) t;
             if (base != null) {
-                if (!base.isSucess) {//非成功
+                if ("500".equals(base.code)) {//非成功
                     this.onUserError(new CommonException(new UserException(base.code, base.msg, base)));
                 } else {//if(base.state == 1)
                     this.onUserSuccess(t);
                 }
-                if (!TextUtils.isEmpty(base.code) && base.code.equals("503")) {  //重复登录
+                if ("401".equals(base.code)) {  //重复登录
                     RxBus.getDefault().post(USER_RELOGIN);
                 }
             } else {
@@ -117,7 +117,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                  */
                 ex = new CommonException(e, CommonException.FLAG_UNKNOWN);
                 if (!ConstantsLib.DEBUG) {
-                    ex.setDoNothing(true);                       
+                    ex.setDoNothing(true);
                     ex.setMsg("");
                 }
                 onUnifiedError(ex);   //未知错误

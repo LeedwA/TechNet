@@ -20,13 +20,19 @@ public class ResBase implements Serializable {
     @SerializedName("code")
     public String code;// 返回编号
 
-    @SerializedName("totalpage")
-    public String totalpage;// 总页数
+    @SerializedName("pageNum")
+    public String pageNum;// 当前页
 
-    @SerializedName("TotalCount")
-    public int totalCount;//列表总数
+    @SerializedName("size")
+    public int size;//当前页数量
 
-    @SerializedName("result")
-    public boolean isSucess;// 是否请求成功
+    @SerializedName("pageSize")
+    public int pageSize;//每页的数量
+
+    @SerializedName("pages")
+    public int totalPages;//总页数
+    
+    @SerializedName("total")
+    public int totalCount;//总记录数
 
 }

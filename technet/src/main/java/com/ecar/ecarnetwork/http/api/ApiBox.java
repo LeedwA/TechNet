@@ -57,12 +57,11 @@ public class ApiBox {
     private static final String CACHE_NAME = "cache";   //缓存目录名称
 
 
-
     /**
      * 单例 持有引用
      */
     private final Gson gson;
-    private final OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
 
     public Application application;//应用上下文(需注入参数)
     private File cacheFile;//缓存路径
@@ -95,14 +94,14 @@ public class ApiBox {
         this.application = builder.application;
         this.cacheFile = builder.cacheDir;
         this.serviceMap = new HashMap<>();
-        if(builder.connetTimeOut > 0){
+        if (builder.connetTimeOut > 0) {
             this.CONNECT_TIME_OUT = builder.connetTimeOut;
         }
-        if(builder.readTimeOut > 0){
+        if (builder.readTimeOut > 0) {
             this.READ_TIME_OUT = builder.readTimeOut;
         }
 
-        if(builder.writeTimeOut > 0){
+        if (builder.writeTimeOut > 0) {
             this.WRITE_TIME_OUT = builder.writeTimeOut;
         }
 
@@ -120,10 +119,10 @@ public class ApiBox {
         //4.创建retrofit. 3.1 请求客户端 3.2 GsonAdpter转换类型 3.3 支持Rxjava 3.4.基url
 
         //1.缓存中获取
-        if(TextUtils.isEmpty(baseUrl)){
+        if (TextUtils.isEmpty(baseUrl)) {
             baseUrl = "";
         }
-        Object serviceObj = serviceMap.get(serviceClass.getName()+baseUrl);
+        Object serviceObj = serviceMap.get(serviceClass.getName() + baseUrl);
         if (serviceObj != null) {
             return (T) serviceObj;
         }
@@ -136,7 +135,7 @@ public class ApiBox {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         T service = retrofit.create(serviceClass);
-        serviceMap.put(serviceClass.getName()+baseUrl, service);
+        serviceMap.put(serviceClass.getName() + baseUrl, service);
         return service;
     }
 
@@ -147,13 +146,14 @@ public class ApiBox {
         private Application application;//应用上下文(需注入参数)
         private File cacheDir;//缓存路径
         private boolean debug;
-        private String  appId;
+        private String appId;
 
         private String reqKey;
         private int connetTimeOut;
         private int readTimeOut;
         private int writeTimeOut;
         private boolean veriNgis = true;
+        private String header;
 
         public Builder application(Application application) {
             this.application = application;
@@ -165,32 +165,39 @@ public class ApiBox {
             this.debug = debug;
             return this;
         }
+
         public Builder veriNgis(boolean veriNgis) {
             this.veriNgis = veriNgis;//设置绕过参数
             return this;
         }
 
-        public Builder reqKey(String reqKey){
+        public Builder reqKey(String reqKey) {
             this.reqKey = reqKey;
             return this;
         }
-        public Builder appId(String appId){
-            this.appId=appId;
+
+        public Builder appId(String appId) {
+            this.appId = appId;
             return this;
         }
 
-        public Builder connetTimeOut(int connetTime){
+        public Builder connetTimeOut(int connetTime) {
             this.connetTimeOut = connetTime;
             return this;
         }
 
-        public Builder readTimeOut(int readTimeOut){
+        public Builder readTimeOut(int readTimeOut) {
             this.readTimeOut = readTimeOut;
             return this;
         }
 
         public Builder writeTimeOut(int writeTimeOut) {
             this.writeTimeOut = writeTimeOut;
+            return this;
+        }
+
+        public Builder setHeader(String header) {
+            this.header = header;
             return this;
         }
 
@@ -203,6 +210,8 @@ public class ApiBox {
                 ConstantsLib.DEBUG = this.debug;
                 ConstantsLib.VeriNgis = this.veriNgis;
                 ConstantsLib.REQUEST_KEY = this.reqKey;
+                ConstantsLib.HEADER_TOKEN = this.header;
+
             }
 
             return SingletonHolder.INSTANCE;
@@ -243,6 +252,45 @@ public class ApiBox {
         return okHttpClient;
     }
 
+    public void setHeader(String headerKey, String headerValue) {
+        //1. 设置打印log
+//        HttpLoggingInterceptor interceptor = getLogInterceptor();
+
+        //2.支持https
+//        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslSocketFactory(null, null, null);
+        HostnameVerifier hostnameVerifier = HttpsUtils.getHostnameVerifier();
+        // 如果使用到HTTPS，我们需要创建SSLSocketFactory，并设置到client
+        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslFactory();
+
+        //3.缓存
+        Cache cache = getReponseCache();
+
+        //4.配置创建okhttp客户端
+        okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(getLogInterceptor())//
+                .addInterceptor(getTokenHeader(headerKey, headerValue))
+                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
+                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
+                .retryOnConnectionFailure(true)//路由等失败自动重连
+                .sslSocketFactory(sslSocketFactory)//https 绕过验证
+                .hostnameVerifier(hostnameVerifier)
+                .build();
+    }
+
+    //head
+    private Interceptor getTokenHeader(final String key, final String value) {
+        return new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder()
+                        .addHeader(key, value).build();
+                return chain.proceed(request);
+            }
+        };
+    }
+
+
     /**
      * 设置打印log
      * 开发模式记录整个body，否则只记录基本信息如返回200，http协议版本等
@@ -258,6 +306,7 @@ public class ApiBox {
         }
         return interceptor;
     }
+
     /**
      * 缓存路径
      *
@@ -280,11 +329,12 @@ public class ApiBox {
 
     /**
      * 方法描述：取消所有请求
-     *<p>
+     * <p>
+     *
      * @param
      * @return
      */
-    public   void cancleAllRequest(){
+    public void cancleAllRequest() {
         okHttpClient.dispatcher().cancelAll();
     }
 

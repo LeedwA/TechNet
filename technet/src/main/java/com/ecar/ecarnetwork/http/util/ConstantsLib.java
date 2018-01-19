@@ -31,4 +31,5 @@ public class ConstantsLib {
     public static boolean DEBUG = false;
     public static boolean VeriNgis = true;
 
+    public static String HEADER_TOKEN="";//头部token
 }
