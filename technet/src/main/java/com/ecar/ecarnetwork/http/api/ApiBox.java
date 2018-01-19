@@ -9,6 +9,7 @@ import com.ecar.ecarnetwork.http.util.ConstantsLib;
 import com.ecar.ecarnetwork.http.util.HttpsUtils;
 import com.ecar.ecarnetwork.http.util.NetWorkUtil;
 import com.ecar.ecarnetwork.util.major.Major;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -323,6 +324,7 @@ public class ApiBox {
     private Gson getReponseGson() {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)//会把字段首字母大写
                 .create();
         return gson;
     }

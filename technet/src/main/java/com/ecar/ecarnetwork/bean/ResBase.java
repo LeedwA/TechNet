@@ -20,6 +20,8 @@ public class ResBase implements Serializable {
     @SerializedName("code")
     public String code;// 返回编号
 
+
+
     @SerializedName("pageNum")
     public String pageNum;// 当前页
 
