@@ -324,7 +324,7 @@ public class ApiBox {
     private Gson getReponseGson() {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)//会把字段首字母大写
+//                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)//会把字段首字母大写
                 .create();
         return gson;
     }
