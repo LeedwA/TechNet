@@ -46,7 +46,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
         if (t instanceof ResBase) {
             ResBase base = (ResBase) t;
             if (base != null) {
-                if ("500".equals(base.code)) {//非成功
+                if (!"200".equals(base.code)) {//非成功
                     this.onUserError(new CommonException(new UserException(base.code, base.msg, base)));
                 } else {//if(base.state == 1)
                     this.onUserSuccess(t);
