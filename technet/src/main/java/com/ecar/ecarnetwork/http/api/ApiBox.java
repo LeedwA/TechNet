@@ -275,7 +275,7 @@ public class ApiBox {
 
         //4.配置创建okhttp客户端
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .addNetworkInterceptor(getHeader(headerKeys, headerValues))
+                .addInterceptor(getHeader(headerKeys, headerValues))
                 .addInterceptor(getLogInterceptor())//
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
