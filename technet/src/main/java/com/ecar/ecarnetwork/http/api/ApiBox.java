@@ -221,9 +221,6 @@ public class ApiBox {
      * 创建ok客户端
      */
     private OkHttpClient getClient() {
-        if (okHttpClient != null) {
-            return okHttpClient;
-        }
         //1. 设置打印log
 //        HttpLoggingInterceptor interceptor = getLogInterceptor();
 
