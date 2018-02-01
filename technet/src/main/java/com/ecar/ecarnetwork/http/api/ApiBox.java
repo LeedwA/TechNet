@@ -3,13 +3,10 @@ package com.ecar.ecarnetwork.http.api;
 import android.app.Application;
 import android.text.TextUtils;
 
-import com.ecar.ecarnetwork.db.SettingPreferences;
 import com.ecar.ecarnetwork.http.converter.ConverterFactory;
 import com.ecar.ecarnetwork.http.util.ConstantsLib;
 import com.ecar.ecarnetwork.http.util.HttpsUtils;
 import com.ecar.ecarnetwork.http.util.NetWorkUtil;
-import com.ecar.ecarnetwork.util.major.Major;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -253,7 +250,14 @@ public class ApiBox {
         return okHttpClient;
     }
 
-    public void setHeader(String headerKey, String headerValue) {
+    /****************************************
+     方法描述：添加header
+     @param  headerKeys  头部key集合
+     @param  headerValues  头部key值集合
+
+     @return
+     ****************************************/
+    public void setHeader(String[] headerKeys, String[] headerValues) {
         //1. 设置打印log
 //        HttpLoggingInterceptor interceptor = getLogInterceptor();
 
@@ -267,20 +271,25 @@ public class ApiBox {
         Cache cache = getReponseCache();
 
         //4.配置创建okhttp客户端
-        okHttpClient = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(getLogInterceptor())//
-                .addInterceptor(getTokenHeader(headerKey, headerValue))
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(true)//路由等失败自动重连
                 .sslSocketFactory(sslSocketFactory)//https 绕过验证
-                .hostnameVerifier(hostnameVerifier)
-                .build();
+                .hostnameVerifier(hostnameVerifier);
+        if (headerKeys != null && headerKeys.length != 0) {
+            int leng = headerKeys.length;
+            for (int i = 0; i < leng; i++) {
+                builder.addInterceptor(getHeader(headerKeys[i],headerValues[i]));
+            }
+        }
+        okHttpClient = builder.build();
     }
 
     //head
-    private Interceptor getTokenHeader(final String key, final String value) {
+    private Interceptor getHeader(final String key, final String value) {
         return new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
