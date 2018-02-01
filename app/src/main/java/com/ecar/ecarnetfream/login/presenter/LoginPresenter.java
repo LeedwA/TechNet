@@ -10,6 +10,7 @@ import com.ecar.ecarnetfream.publics.network.Datacenter;
 import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetwork.base.BaseSubscriber;
 import com.ecar.ecarnetwork.bean.ResBase;
+import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.UserException;
 import com.ecar.ecarnetwork.util.rx.RxUtils;
@@ -88,7 +89,10 @@ public class LoginPresenter extends LoginContract.Presenter {
         };
 
         //一个请求（登录）
-        Subscription subscribe = Datacenter.get().login(name, pwd).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
+        Subscription subscribe = Datacenter.get().login(name, pwd).
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
+        ApiBox.getInstance().setHeader(new String[]{"xxxxxxxxxx+++++++++++xxx"}, new String[]{"xx============="});
+        Datacenter.get().reset();
         rxManage.add(subscribe);//添加到订阅集合中
 
     }

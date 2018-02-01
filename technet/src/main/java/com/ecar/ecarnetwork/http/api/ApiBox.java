@@ -120,10 +120,10 @@ public class ApiBox {
         if (TextUtils.isEmpty(baseUrl)) {
             baseUrl = "";
         }
-        Object serviceObj = serviceMap.get(serviceClass.getName() + baseUrl);
-        if (serviceObj != null) {
-            return (T) serviceObj;
-        }
+//        Object serviceObj = serviceMap.get(serviceClass.getName() + baseUrl);
+//        if (serviceObj != null) {
+//            return (T) serviceObj;
+//        }
 
         //2.创建
         Retrofit retrofit = new Retrofit.Builder()
@@ -235,6 +235,7 @@ public class ApiBox {
 
         //4.配置创建okhttp客户端
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(getHeader(new String[]{"1111111111111111"}, new String[]{"222222222222222222"}))
                 .addInterceptor(getLogInterceptor())//
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)

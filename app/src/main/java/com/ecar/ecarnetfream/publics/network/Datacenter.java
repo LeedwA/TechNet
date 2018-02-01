@@ -61,7 +61,9 @@ public class Datacenter {
         }
         return datacenter;
     }
-
+     public void reset(){
+         apiService = ApiBox.getInstance().createService(ApiService.class, "http://115.159.123.33:9000");
+     }
     public Observable<ResLogin> login(String mobileno, String pwd) {
 
 //        HashMap<String, String> tMap = new HashMap<>();
