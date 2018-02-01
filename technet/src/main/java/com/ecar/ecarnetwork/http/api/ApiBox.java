@@ -273,28 +273,29 @@ public class ApiBox {
         //4.配置创建okhttp客户端
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(getLogInterceptor())//
+                .addInterceptor(getHeader(headerKeys, headerValues))
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(true)//路由等失败自动重连
                 .sslSocketFactory(sslSocketFactory)//https 绕过验证
                 .hostnameVerifier(hostnameVerifier);
-        if (headerKeys != null && headerKeys.length != 0) {
-            int leng = headerKeys.length;
-            for (int i = 0; i < leng; i++) {
-                builder.addInterceptor(getHeader(headerKeys[i],headerValues[i]));
-            }
-        }
         okHttpClient = builder.build();
     }
 
     //head
-    private Interceptor getHeader(final String key, final String value) {
+    private Interceptor getHeader(final String[] headerKeys, final String[] headerValues) {
         return new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder()
-                        .addHeader(key, value).build();
+                Request.Builder builder = chain.request().newBuilder();
+                if (headerKeys != null && headerKeys.length != 0) {
+                    int leng = headerKeys.length;
+                    for (int i = 0; i < leng; i++) {
+                        builder.header(headerKeys[i], headerValues[i]);
+                    }
+                }
+                Request request = builder.build();
                 return chain.proceed(request);
             }
         };
