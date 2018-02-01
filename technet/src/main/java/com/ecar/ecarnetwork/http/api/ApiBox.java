@@ -261,34 +261,33 @@ public class ApiBox {
      @return
      ****************************************/
     public void setHeader(String[] headerKeys, String[] headerValues) {
-        okHttpClient.interceptors().add(getHeader(headerKeys, headerValues));
-//        //1. 设置打印log
-////        HttpLoggingInterceptor interceptor = getLogInterceptor();
-//
-//        //2.支持https
-////        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslSocketFactory(null, null, null);
-//        HostnameVerifier hostnameVerifier = HttpsUtils.getHostnameVerifier();
-//        // 如果使用到HTTPS，我们需要创建SSLSocketFactory，并设置到client
-//        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslFactory();
-//
-//        //3.缓存
-//        Cache cache = getReponseCache();
-//
-//        //4.配置创建okhttp客户端
-//        OkHttpClient.Builder builder = new OkHttpClient.Builder()
-//                .addInterceptor(getLogInterceptor())//
-//                .addNetworkInterceptor(getHeader(headerKeys, headerValues))
-//                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
-//                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
-//                .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
-//                .retryOnConnectionFailure(true)//路由等失败自动重连
-//                .sslSocketFactory(sslSocketFactory)//https 绕过验证
-//                .hostnameVerifier(hostnameVerifier);
-//        okHttpClient = builder.build();
+        //1. 设置打印log
+//        HttpLoggingInterceptor interceptor = getLogInterceptor();
+
+        //2.支持https
+//        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslSocketFactory(null, null, null);
+        HostnameVerifier hostnameVerifier = HttpsUtils.getHostnameVerifier();
+        // 如果使用到HTTPS，我们需要创建SSLSocketFactory，并设置到client
+        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslFactory();
+
+        //3.缓存
+        Cache cache = getReponseCache();
+
+        //4.配置创建okhttp客户端
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .addNetworkInterceptor(getHeader(headerKeys, headerValues))
+                .addInterceptor(getLogInterceptor())//
+                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
+                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
+                .retryOnConnectionFailure(true)//路由等失败自动重连
+                .sslSocketFactory(sslSocketFactory)//https 绕过验证
+                .hostnameVerifier(hostnameVerifier);
+        okHttpClient = builder.build();
     }
 
     //head
-    private Interceptor getHeader(final String[] headerKeys, final String[] headerValues) {
+    public Interceptor getHeader(final String[] headerKeys, final String[] headerValues) {
         return new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -296,7 +295,7 @@ public class ApiBox {
                 if (headerKeys != null && headerKeys.length != 0) {
                     int leng = headerKeys.length;
                     for (int i = 0; i < leng; i++) {
-                        builder.addHeader(headerKeys[i], headerValues[i]);
+                        builder.header(headerKeys[i], headerValues[i]);
                     }
                 }
                 Request request = builder.build();
