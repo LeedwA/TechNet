@@ -221,6 +221,9 @@ public class ApiBox {
      * 创建ok客户端
      */
     private OkHttpClient getClient() {
+        if (okHttpClient != null) {
+            return okHttpClient;
+        }
         //1. 设置打印log
 //        HttpLoggingInterceptor interceptor = getLogInterceptor();
 
@@ -258,7 +261,7 @@ public class ApiBox {
      @return
      ****************************************/
     public void setHeader(String[] headerKeys, String[] headerValues) {
-        okHttpClient.interceptors().add(getHeader(headerKeys,headerValues));
+        okHttpClient.interceptors().add(getHeader(headerKeys, headerValues));
 //        //1. 设置打印log
 ////        HttpLoggingInterceptor interceptor = getLogInterceptor();
 //
