@@ -292,7 +292,7 @@ public class ApiBox {
                 if (headerKeys != null && headerKeys.length != 0) {
                     int leng = headerKeys.length;
                     for (int i = 0; i < leng; i++) {
-                        builder.header(headerKeys[i], headerValues[i]);
+                        builder.addHeader(headerKeys[i], headerValues[i]);
                     }
                 }
                 Request request = builder.build();
