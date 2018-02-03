@@ -7,6 +7,7 @@ import com.ecar.ecarnetwork.http.converter.ConverterFactory;
 import com.ecar.ecarnetwork.http.util.ConstantsLib;
 import com.ecar.ecarnetwork.http.util.HttpsUtils;
 import com.ecar.ecarnetwork.http.util.NetWorkUtil;
+import com.ecar.ecarnetwork.util.converter.StringConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -235,7 +236,7 @@ public class ApiBox {
 
         //4.配置创建okhttp客户端
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(getHeader(new String[]{"1111111111111111"}, new String[]{"222222222222222222"}))
+//                .addInterceptor(getHeader(new String[]{"1111111111111111"}, new String[]{"222222222222222222"}))
                 .addInterceptor(getLogInterceptor())//
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
@@ -336,6 +337,7 @@ public class ApiBox {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
 //                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)//会把字段首字母大写
+                .registerTypeAdapter(String.class, new StringConverter())//对为null的字段进行转换
                 .create();
         return gson;
     }
