@@ -337,7 +337,7 @@ public class ApiBox {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
 //                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)//会把字段首字母大写
-                .registerTypeAdapter(String.class, new StringConverter())//对为null的字段进行转换
+//                .registerTypeAdapter(String.class, new StringConverter())//对为null的字段进行转换
                 .create();
         return gson;
     }
