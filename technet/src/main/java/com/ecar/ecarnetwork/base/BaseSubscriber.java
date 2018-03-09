@@ -25,6 +25,7 @@ import rx.Subscriber;
 import rxbus.ecaray.com.rxbuslib.rxbus.RxBus;
 
 import static com.ecar.ecarnetwork.http.exception.CommonException.USER_RELOGIN;
+import static com.ecar.ecarnetwork.http.exception.CommonException.USER_TOKEN_ERORR;
 
 
 /**
@@ -46,6 +47,8 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
         if (t instanceof ResBase) {
             ResBase base = (ResBase) t;
             if (base != null) {
+                base.msg = ConstantsLib.serverCodeMap.get(base.code);
+
                 if (!"200".equals(base.code)) {//非成功
                     this.onUserError(new CommonException(new UserException(base.code, base.msg, base)));
                 } else {//if(base.state == 1)
@@ -53,6 +56,9 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 }
                 if ("401".equals(base.code)) {  //重复登录
                     RxBus.getDefault().post(USER_RELOGIN);
+                }
+                if ("60016".equals(base.code)) {  //重复登录
+                    RxBus.getDefault().post(USER_TOKEN_ERORR);
                 }
             } else {
                 this.onUserError(new CommonException(new UserException("请求服务器失败")));

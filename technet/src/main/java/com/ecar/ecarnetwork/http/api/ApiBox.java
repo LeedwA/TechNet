@@ -154,14 +154,22 @@ public class ApiBox {
         private boolean veriNgis = true;
         private String header;
 
+        private Map<String, String> serverCodeMap = new HashMap<>();
+
         public Builder application(Application application) {
             this.application = application;
             this.cacheDir = new File(application.getCacheDir(), CACHE_NAME);
             return this;
         }
 
+
         public Builder debug(boolean debug) {
             this.debug = debug;
+            return this;
+        }
+
+        public Builder codeMap(HashMap<String, String> serverCodeMap) {
+            this.serverCodeMap = serverCodeMap;
             return this;
         }
 
@@ -210,6 +218,7 @@ public class ApiBox {
                 ConstantsLib.VeriNgis = this.veriNgis;
                 ConstantsLib.REQUEST_KEY = this.reqKey;
                 ConstantsLib.HEADER_TOKEN = this.header;
+                ConstantsLib.serverCodeMap = this.serverCodeMap;
 
             }
 

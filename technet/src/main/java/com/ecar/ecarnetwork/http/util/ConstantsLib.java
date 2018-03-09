@@ -1,5 +1,10 @@
 package com.ecar.ecarnetwork.http.util;
 
+import android.util.ArrayMap;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 常量类
  */
@@ -23,7 +28,7 @@ public class ConstantsLib {
     /**
      * APP_ID
      */
-    public static String APP_ID="";
+    public static String APP_ID = "";
 
     /**
      * Log 日志开关 发布版本设为false
@@ -31,5 +36,8 @@ public class ConstantsLib {
     public static boolean DEBUG = false;
     public static boolean VeriNgis = true;
 
-    public static String HEADER_TOKEN="";//头部token
+    public static String HEADER_TOKEN = "";//头部token
+    //code集合
+    public static Map<String, String> serverCodeMap=new HashMap<>();
+
 }
