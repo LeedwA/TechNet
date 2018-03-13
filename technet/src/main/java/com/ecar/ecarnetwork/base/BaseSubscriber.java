@@ -47,7 +47,10 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
         if (t instanceof ResBase) {
             ResBase base = (ResBase) t;
             if (base != null) {
-                base.msg = ConstantsLib.serverCodeMap.get(base.code);
+                String nMsg = ConstantsLib.serverCodeMap.get(base.code);
+                if (!TextUtils.isEmpty(nMsg)) {
+                    base.msg = nMsg;
+                }
 
                 if (!"200".equals(base.code)) {//非成功
                     this.onUserError(new CommonException(new UserException(base.code, base.msg, base)));

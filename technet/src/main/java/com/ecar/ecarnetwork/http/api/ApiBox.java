@@ -169,7 +169,7 @@ public class ApiBox {
         }
 
         public Builder codeMap(HashMap<String, String> serverCodeMap) {
-            this.serverCodeMap = serverCodeMap;
+            ConstantsLib.serverCodeMap = serverCodeMap;
             return this;
         }
 
