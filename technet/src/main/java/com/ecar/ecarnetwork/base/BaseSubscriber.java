@@ -123,8 +123,8 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 onUnifiedError(ex);
             } else {
                 if (e instanceof HttpException &&
-                        "401".equals(String.valueOf(((HttpException) e).code())) &&
-                        "404".equals(String.valueOf(((HttpException) e).code())) &&
+                        "401".equals(String.valueOf(((HttpException) e).code())) ||
+                        "404".equals(String.valueOf(((HttpException) e).code())) ||
                         "500".equals(String.valueOf(((HttpException) e).code()))) {
                     /**
                      * 4.网络错误
