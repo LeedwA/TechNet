@@ -21,6 +21,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rxbus.ecaray.com.rxbuslib.rxbus.RxBus;
 
@@ -60,7 +61,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 if ("401".equals(base.code)) {  //重复登录
                     RxBus.getDefault().post(USER_RELOGIN);
                 }
-                if ("60016".equals(base.code)) {  //重复登录
+                if ("60016".equals(base.code) || "60024".equals(base.code)) {  //重复登录
                     RxBus.getDefault().post(USER_TOKEN_ERORR);
                 }
             } else {
@@ -121,15 +122,27 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 ex = new CommonException(e, CommonException.FLAG_PERMISSION_ERROR);
                 onUnifiedError(ex);
             } else {
-                /**
-                 * 5.未知错误
-                 */
-                ex = new CommonException(e, CommonException.FLAG_UNKNOWN);
+                if (e instanceof HttpException &&
+                        "401".equals(String.valueOf(((HttpException) e).code())) &&
+                        "404".equals(String.valueOf(((HttpException) e).code())) &&
+                        "500".equals(String.valueOf(((HttpException) e).code()))) {
+                    /**
+                     * 4.网络错误
+                     */
+                    String code = String.valueOf(((HttpException) e).code());
+                    ex = new CommonException(e, code);
+                } else {
+                    /**
+                     * 5.未知错误
+                     */
+                    ex = new CommonException(e, CommonException.FLAG_UNKNOWN);
+                }
                 if (!ConstantsLib.DEBUG) {
                     ex.setDoNothing(true);
                     ex.setMsg("");
                 }
                 onUnifiedError(ex);   //未知错误
+
             }
             resetContext();
             if (ConstantsLib.DEBUG && ex != null) {

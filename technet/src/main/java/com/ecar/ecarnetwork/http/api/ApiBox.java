@@ -302,7 +302,8 @@ public class ApiBox {
                 Request.Builder builder = chain.request().newBuilder();
                 if (headerKeys != null && headerKeys.length != 0) {
                     int leng = headerKeys.length;
-                    for (int i = 0; i < leng; i++) {
+                    for (int i = 0; i < leng; i++)
+                    {
                         builder.header(headerKeys[i], headerValues[i]);
                     }
                 }

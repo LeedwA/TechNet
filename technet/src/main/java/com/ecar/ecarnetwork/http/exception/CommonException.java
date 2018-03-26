@@ -25,6 +25,7 @@ public class CommonException extends Exception {
     public static final String USER_TOKEN_ERORR = "1006"; //token过期
 
 
+
     public static Map<String, String> exApiMaps = new HashMap<>();
 
     static {
