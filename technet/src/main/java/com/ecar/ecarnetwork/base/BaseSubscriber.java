@@ -58,10 +58,10 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 } else {//if(base.state == 1)
                     this.onUserSuccess(t);
                 }
-                if ("401".equals(base.code)) {  //重复登录
+                if ("60016".equals(base.code)) {  //重复登录
                     RxBus.getDefault().post(USER_RELOGIN);
                 }
-                if ("60016".equals(base.code) || "60024".equals(base.code)) {  //重复登录
+                if ("401".equals(base.code) || "60024".equals(base.code)) {  //token实效
                     RxBus.getDefault().post(USER_TOKEN_ERORR);
                 }
             } else {
@@ -126,11 +126,15 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                         "401".equals(String.valueOf(((HttpException) e).code())) ||
                         "404".equals(String.valueOf(((HttpException) e).code())) ||
                         "500".equals(String.valueOf(((HttpException) e).code()))) {
+                    if ("401".equals(String.valueOf(((HttpException) e).code()))) {
+                        RxBus.getDefault().post(USER_TOKEN_ERORR);
+                    }
                     /**
                      * 4.网络错误
                      */
                     String code = String.valueOf(((HttpException) e).code());
                     ex = new CommonException(e, code);
+
                 } else {
                     /**
                      * 5.未知错误
