@@ -122,10 +122,10 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 ex = new CommonException(e, CommonException.FLAG_PERMISSION_ERROR);
                 onUnifiedError(ex);
             } else {
-                if (e instanceof HttpException &&
+                if (e instanceof HttpException && (
                         "401".equals(String.valueOf(((HttpException) e).code())) ||
                         "404".equals(String.valueOf(((HttpException) e).code())) ||
-                        "500".equals(String.valueOf(((HttpException) e).code()))) {
+                        "500".equals(String.valueOf(((HttpException) e).code())))) {
                     if ("401".equals(String.valueOf(((HttpException) e).code()))) {
                         RxBus.getDefault().post(USER_TOKEN_ERORR);
                     }
