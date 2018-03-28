@@ -22,7 +22,9 @@ public class CommonException extends Exception {
     public static final String FLAG_PERMISSION_ERROR = "1004";//权限异常
 
     public static final String USER_RELOGIN = "1005"; //登录重复
-    public static final String USER_TOKEN_ERORR = "1006"; //token过期
+    public static final String USER_ACESSTOKEN_ERORR = "1006"; //token过期
+    public static final String USER_REFRESHTOKEN_ERORR = "1007"; //token过期
+
 
 
 

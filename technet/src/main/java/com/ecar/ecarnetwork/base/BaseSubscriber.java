@@ -5,7 +5,6 @@ import android.net.ParseException;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetwork.bean.ResBase;
-import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.exception.UserException;
@@ -25,8 +24,9 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rxbus.ecaray.com.rxbuslib.rxbus.RxBus;
 
+import static com.ecar.ecarnetwork.http.exception.CommonException.USER_REFRESHTOKEN_ERORR;
 import static com.ecar.ecarnetwork.http.exception.CommonException.USER_RELOGIN;
-import static com.ecar.ecarnetwork.http.exception.CommonException.USER_TOKEN_ERORR;
+import static com.ecar.ecarnetwork.http.exception.CommonException.USER_ACESSTOKEN_ERORR;
 
 
 /**
@@ -61,8 +61,11 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                 if ("60016".equals(base.code)) {  //重复登录
                     RxBus.getDefault().post(USER_RELOGIN);
                 }
-                if ("401".equals(base.code) || "60024".equals(base.code)) {  //token实效
-                    RxBus.getDefault().post(USER_TOKEN_ERORR);
+                if ("401".equals(base.code)) {  //accessToken失效
+                    RxBus.getDefault().post(USER_ACESSTOKEN_ERORR);
+                }
+                if ("60024".equals(base.code)) {  //refreshToken失效
+                    RxBus.getDefault().post(USER_REFRESHTOKEN_ERORR);
                 }
             } else {
                 this.onUserError(new CommonException(new UserException("请求服务器失败")));
@@ -124,10 +127,10 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
             } else {
                 if (e instanceof HttpException && (
                         "401".equals(String.valueOf(((HttpException) e).code())) ||
-                        "404".equals(String.valueOf(((HttpException) e).code())) ||
-                        "500".equals(String.valueOf(((HttpException) e).code())))) {
+                                "404".equals(String.valueOf(((HttpException) e).code())) ||
+                                "500".equals(String.valueOf(((HttpException) e).code())))) {
                     if ("401".equals(String.valueOf(((HttpException) e).code()))) {
-                        RxBus.getDefault().post(USER_TOKEN_ERORR);
+                        RxBus.getDefault().post(USER_ACESSTOKEN_ERORR);
                     }
                     /**
                      * 4.网络错误
