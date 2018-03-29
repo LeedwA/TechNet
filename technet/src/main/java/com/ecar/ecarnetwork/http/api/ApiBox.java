@@ -257,6 +257,7 @@ public class ApiBox {
 //                .cookieJar()//cookie
                 .build();
           okHttpClient.dispatcher().setMaxRequestsPerHost(20);
+          okHttpClient.dispatcher().setMaxRequests(128);
 //        builder.interceptors().add(interceptor);
         return okHttpClient;
     }
