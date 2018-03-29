@@ -7,7 +7,6 @@ import com.ecar.ecarnetwork.http.converter.ConverterFactory;
 import com.ecar.ecarnetwork.http.util.ConstantsLib;
 import com.ecar.ecarnetwork.http.util.HttpsUtils;
 import com.ecar.ecarnetwork.http.util.NetWorkUtil;
-import com.ecar.ecarnetwork.util.converter.StringConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -257,6 +256,7 @@ public class ApiBox {
 //                .addNetworkInterceptor(new HttpCacheInterceptor())//
 //                .cookieJar()//cookie
                 .build();
+          okHttpClient.dispatcher().setMaxRequestsPerHost(20);
 //        builder.interceptors().add(interceptor);
         return okHttpClient;
     }
