@@ -5,6 +5,7 @@ import android.net.ParseException;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetwork.bean.ResBase;
+import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.exception.UserException;
@@ -27,6 +28,7 @@ import rxbus.ecaray.com.rxbuslib.rxbus.RxBus;
 import static com.ecar.ecarnetwork.http.exception.CommonException.USER_REFRESHTOKEN_ERORR;
 import static com.ecar.ecarnetwork.http.exception.CommonException.USER_RELOGIN;
 import static com.ecar.ecarnetwork.http.exception.CommonException.USER_ACESSTOKEN_ERORR;
+import static com.ecar.ecarnetwork.http.util.ConstantsLib.IS_UNCHECK;
 
 
 /**
@@ -48,6 +50,10 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
         if (t instanceof ResBase) {
             ResBase base = (ResBase) t;
             if (base != null) {
+                if (IS_UNCHECK) {
+                    this.onUserSuccess(t);
+                    return;
+                }
                 String nMsg = ConstantsLib.serverCodeMap.get(base.code);
                 if (!TextUtils.isEmpty(nMsg)) {
                     base.msg = nMsg;
