@@ -31,7 +31,7 @@ public class CommonException extends Exception {
     public static Map<String, String> exApiMaps = new HashMap<>();
 
     static {
-        exApiMaps.put(FLAG_NET_ERROR, "网络不给力，请检查网络连接");
+        exApiMaps.put(FLAG_NET_ERROR, "网络不给力，请检查网络设置");
         exApiMaps.put(FLAG_PARSE_ERROR, "解析异常");
         exApiMaps.put(FLAG_PERMISSION_ERROR, "未许可相关权限");
         exApiMaps.put(FLAG_UNKNOWN, "未知的错误");
