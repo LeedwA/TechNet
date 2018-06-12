@@ -24,12 +24,15 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile('com.squareup.retrofit2:retrofit:2.1.0') {
         exclude group: "com.google", module: "gson"
+        exclude  module: "rxjava"
+
+
     }
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    provided('com.github.TopTech666:TechRxbus:latest.release') {
-        exclude group: "io.reactivex", module: "rxjava"
+    compile ('com.squareup.retrofit2:adapter-rxjava:2.1.0'){
+        exclude  module: "rxjava"
     }
+    provided('com.github.TopTech666:TechRxbus:latest.release')
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
 }

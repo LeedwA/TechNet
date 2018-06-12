@@ -52,8 +52,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'org.mockito:mockito-core:2.0.104-beta'
-    compile('com.github.TopTech666:TechRxbus:latest.release') {
-        exclude group: "io.reactivex", module: "rxjava"
-    }
+    compile('com.github.TopTech666:TechRxbus:latest.release') 
     compile project(':technet')
 }
