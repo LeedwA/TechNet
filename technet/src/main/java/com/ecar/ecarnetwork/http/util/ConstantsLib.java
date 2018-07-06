@@ -10,15 +10,8 @@ import java.util.Map;
  */
 public class ConstantsLib {
 
-    /**
-     * 3G模式读取文件缓存时间限制
-     */
-    public static final int CONFIG_CACHE_MOBILE_TIMEOUT = 60000 * 60 * 10; // 10小时
+    public static String RESPONES_HEADERNAME = "cwgj_type";//返回的header
 
-    /**
-     * wifi模式读取文件缓存时间限制
-     */
-    public static final int CONFIG_CACHE_WIFI_TIMEOUT = 60000 * 60 * 5; // 5小时
 
     /**
      * REQUEST_KEY
@@ -39,6 +32,7 @@ public class ConstantsLib {
 
 
     public static String HEADER_TOKEN = "";//头部token
+
     //code集合
     public static Map<String, String> serverCodeMap=new HashMap<>();
 

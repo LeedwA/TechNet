@@ -78,7 +78,8 @@ public class Datacenter {
 //        Observable<ResLogin> observable = apiService.login(tMap);//ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
 //        ApiBox.getInstance().cancleAllRequest();
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson((new ResLogin()).build()));
-        Observable<ResLogin> observable = apiService.createSubject(body);//ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
+        Observable<ResLogin> observable = apiService.createSubject(body);
+        //ApiBox.getInstance().createService(ApiService.class, HttpUrl.Base_Url).login(reMap);
         return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 

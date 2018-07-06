@@ -11,8 +11,11 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
+
+import static com.ecar.ecarnetwork.http.util.ConstantsLib.RESPONES_HEADERNAME;
 
 /**
  * 自定义响应体的转换器
@@ -43,13 +46,14 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
         this.type = type;
     }
 
+
     @Override
     public T convert(final ResponseBody value) throws IOException {
         ResBase base = null;
         String response = null;
         try {
-            response = value.string();
-        } catch (IOException e) {
+            response = value.toString();
+        } catch (Exception e) {
             e.printStackTrace();
             TagLibUtil.showLogDebug("请求成功，获取返回值失败");
             return null;
@@ -57,7 +61,8 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
         Log.i("thread", Thread.currentThread().getName());
         try {
             base = gson.fromJson(response, type);
-
+//            base.head=value.header(RESPONES_HEADERNAME,"");
+//            base.netCode=value.code();
             /**
              * 保存utv
              */

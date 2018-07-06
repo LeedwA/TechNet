@@ -35,7 +35,7 @@ import static com.ecar.ecarnetwork.http.util.ConstantsLib.IS_UNCHECK;
  * 订阅者基类：对异常统一处理
  * 目测权限处理可以放这里做
  */
-public abstract class BaseSubscriber<T> extends Subscriber<T> {
+public abstract class BaseSubscriber<T extends ResBase> extends Subscriber<T> {
 
     private Context context;
     private IInvalid iInvalid;

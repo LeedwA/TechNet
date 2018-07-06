@@ -45,7 +45,9 @@ dependencies {
         exclude module: "rxandroid"
 
     }
-    provided('com.github.TopTech666:TechRxbus:latest.release')
+    provided('com.github.TopTech666:TechRxbus:latest.release')  {
+
+    }
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
 }

@@ -2,6 +2,7 @@ package com.ecar.ecarnetwork.http.api;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ecar.ecarnetwork.http.converter.ConverterFactory;
 import com.ecar.ecarnetwork.http.util.ConstantsLib;
@@ -246,6 +247,7 @@ public class ApiBox {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //                .addInterceptor(getHeader(new String[]{"1111111111111111"}, new String[]{"222222222222222222"}))
                 .addInterceptor(getLogInterceptor())//
+                .addInterceptor(getNetStateInterceptor())//
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
@@ -258,6 +260,17 @@ public class ApiBox {
                 .build();
 //        builder.interceptors().add(interceptor);
         return okHttpClient;
+    }
+
+    private Interceptor getResponseInterceptor() {
+        return new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response response = chain.proceed(chain.request());
+                response.header(ConstantsLib.RESPONES_HEADERNAME, "");
+                return response;
+            }
+        };
     }
 
     /****************************************
@@ -284,13 +297,35 @@ public class ApiBox {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(getHeader(headerKeys, headerValues))
                 .addInterceptor(getLogInterceptor())//
-                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
+                .addInterceptor(getNetStateInterceptor()).//
+                connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(true)//路由等失败自动重连
                 .sslSocketFactory(sslSocketFactory)//https 绕过验证
                 .hostnameVerifier(hostnameVerifier);
         okHttpClient = builder.build();
+    }
+
+    //网络状态判断
+    private Interceptor getNetStateInterceptor() {
+        return new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request();
+//                Log.e(TAG, "okhttp3:" + 、request.toString());//输出请求前整个url
+//                long t1 = System.nanoTime();
+                okhttp3.Response response = chain.proceed(chain.request());
+//                long t2 = System.nanoTime();
+//          Log.v(TAG,response.request().url()+response.headers());//输出一个请求的网络信息
+                okhttp3.MediaType mediaType = response.body().contentType();
+                String content = response.body().string();
+                Log.e("response", "response head:" + response.header(ConstantsLib.RESPONES_HEADERNAME, "response不存在此head"));//输出返回信息
+                return response.newBuilder()
+                        .body(okhttp3.ResponseBody.create(mediaType, content))
+                        .build();
+            }
+        };
     }
 
     //head
@@ -301,8 +336,7 @@ public class ApiBox {
                 Request.Builder builder = chain.request().newBuilder();
                 if (headerKeys != null && headerKeys.length != 0) {
                     int leng = headerKeys.length;
-                    for (int i = 0; i < leng; i++)
-                    {
+                    for (int i = 0; i < leng; i++) {
                         builder.header(headerKeys[i], headerValues[i]);
                     }
                 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author Administrator
  */
-public class ResBase implements Serializable {
+public class ResBase<T> implements Serializable {
 
     @SerializedName("message")
     public String msg;// 错误信息
@@ -20,6 +20,9 @@ public class ResBase implements Serializable {
     @SerializedName("code")
     public String code;// 返回编号
 
+
+    @SerializedName("data")
+    public T data;// 返回编号
 
 
     @SerializedName("pageNum")
@@ -36,5 +39,9 @@ public class ResBase implements Serializable {
     
     @SerializedName("total")
     public int totalCount;//总记录数
+
+    public String head;
+    public int netCode;// 网络状态编号
+
 
 }

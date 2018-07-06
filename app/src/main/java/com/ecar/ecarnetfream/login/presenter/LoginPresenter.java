@@ -91,8 +91,8 @@ public class LoginPresenter extends LoginContract.Presenter {
         //一个请求（登录）
         Subscription subscribe = Datacenter.get().login(name, pwd).
                 subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
-        ApiBox.getInstance().setHeader(new String[]{"xxxxxxxxxx+++++++++++xxx"}, new String[]{"xx============="});
-        Datacenter.get().reset();
+//        ApiBox.getInstance().setHeader(new String[]{"xxxxxxxxxx+++++++++++xxx"}, new String[]{"xx============="});
+//        Datacenter.get().reset();
         rxManage.add(subscribe);//添加到订阅集合中
 
     }
