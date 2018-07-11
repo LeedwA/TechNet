@@ -48,7 +48,6 @@ public class CommonException extends Exception {
     private String msg = "";
     private ResBase resObj;
     private boolean isDoNothing;
-
     public CommonException(Throwable throwable, String code) {
         super(throwable);
         this.code = code;

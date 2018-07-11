@@ -26,7 +26,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
@@ -247,7 +249,6 @@ public class ApiBox {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //                .addInterceptor(getHeader(new String[]{"1111111111111111"}, new String[]{"222222222222222222"}))
                 .addInterceptor(getLogInterceptor())//
-                .addInterceptor(getNetStateInterceptor())//
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
@@ -296,8 +297,7 @@ public class ApiBox {
         //4.配置创建okhttp客户端
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(getHeader(headerKeys, headerValues))
-                .addInterceptor(getLogInterceptor())//
-                .addInterceptor(getNetStateInterceptor()).//
+                .addInterceptor(getLogInterceptor()).//
                 connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS) //与服务器连接超时时间
                 .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
@@ -306,27 +306,25 @@ public class ApiBox {
                 .hostnameVerifier(hostnameVerifier);
         okHttpClient = builder.build();
     }
-
-    //网络状态判断
-    private Interceptor getNetStateInterceptor() {
-        return new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-//                Request request = chain.request();
-//                Log.e(TAG, "okhttp3:" + 、request.toString());//输出请求前整个url
-//                long t1 = System.nanoTime();
-                okhttp3.Response response = chain.proceed(chain.request());
-//                long t2 = System.nanoTime();
-//          Log.v(TAG,response.request().url()+response.headers());//输出一个请求的网络信息
-                okhttp3.MediaType mediaType = response.body().contentType();
-                String content = response.body().string();
-                Log.e("response", "response head:" + response.header(ConstantsLib.RESPONES_HEADERNAME, "response不存在此head"));//输出返回信息
-                return response.newBuilder()
-                        .body(okhttp3.ResponseBody.create(mediaType, content))
-                        .build();
-            }
-        };
-    }
+//
+//    //网络状态判断
+//    private Interceptor getNetStateInterceptor() {
+//        return new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+////                Request request = chain.request();
+////                Log.e(TAG, "okhttp3:" + request.toString());//输出请求前整个url
+////                long t1 = System.nanoTime();
+//                okhttp3.Response response = chain.proceed(chain.request());
+////                long t2 = System.nanoTime();
+////          Log.v(TAG,response.request().url()+response.headers());//输出一个请求的网络信息
+//                okhttp3.MediaType mediaType = response.body().contentType();
+//                String content = response.body().string();
+//                Log.e("response", "response head:" + response.header(ConstantsLib.RESPONES_HEADERNAME, "response不存在此head"));//输出返回信息
+//                return response;
+//            }
+//        };
+//    }
 
     //head
     public Interceptor getHeader(final String[] headerKeys, final String[] headerValues) {

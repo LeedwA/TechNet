@@ -18,7 +18,7 @@ public class ResBase<T> implements Serializable {
     public String sign;// 簽名
 
     @SerializedName("code")
-    public String code;// 返回编号
+    public String code="200";// 返回编号
 
 
     @SerializedName("data")

@@ -12,6 +12,7 @@ import com.ecar.ecarnetwork.http.exception.UserException;
 import com.ecar.ecarnetwork.http.util.ConstantsLib;
 import com.ecar.ecarnetwork.http.util.TagLibUtil;
 import com.ecar.ecarnetwork.interfaces.security.IInvalid;
+import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
@@ -21,6 +22,8 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rxbus.ecaray.com.rxbuslib.rxbus.RxBus;
@@ -70,7 +73,7 @@ public abstract class BaseSubscriber<T extends ResBase> extends Subscriber<T> {
                 if ("401".equals(base.code)) {  //accessToken失效
                     RxBus.getDefault().post(USER_ACESSTOKEN_ERORR);
                 }
-                if ("60024".equals(base.code)) {  //refreshToken失效
+                if ("60024".equals(base.code)) {  //re  freshToken失效
                     RxBus.getDefault().post(USER_REFRESHTOKEN_ERORR);
                 }
             } else {
@@ -131,18 +134,41 @@ public abstract class BaseSubscriber<T extends ResBase> extends Subscriber<T> {
                 ex = new CommonException(e, CommonException.FLAG_PERMISSION_ERROR);
                 onUnifiedError(ex);
             } else {
-                if (e instanceof HttpException && (
-                        "401".equals(String.valueOf(((HttpException) e).code())) ||
-                                "404".equals(String.valueOf(((HttpException) e).code())) ||
-                                "500".equals(String.valueOf(((HttpException) e).code())))) {
-                    if ("401".equals(String.valueOf(((HttpException) e).code()))) {
+
+                if (e instanceof HttpException) {
+                    HttpException httpException = (HttpException) e;
+                    String head = httpException.response().headers().get(ConstantsLib.RESPONES_HEADERNAME);
+                    String code = String.valueOf(httpException.code());
+
+                    if ("401".equals(String.valueOf(httpException.code()))) {
                         RxBus.getDefault().post(USER_ACESSTOKEN_ERORR);
                     }
-                    /**
-                     * 4.网络错误
-                     */
-                    String code = String.valueOf(((HttpException) e).code());
-                    ex = new CommonException(e, code);
+                    //胶水层
+                    if (!TextUtils.isEmpty(head) &&
+                            head.equals(ConstantsLib.RESPONES_HEADERVALUE)) {
+                        if ("400".equals(code)) {  //业务异常 1
+                            String response = httpException.response().message();
+                            ResBase base = new Gson().fromJson(response, ResBase.class);
+                            ex = new CommonException(httpException, base.code);
+                        }
+                        String nMsg = ConstantsLib.serverCodeMap.get(code);
+
+                        if ("403".equals(code)) {  //业务异常 2
+                            ex = new CommonException(e, code);
+                            ex.setMsg(nMsg);
+                        }
+                        if ("500".equals(code)) {  //业务异常 3
+                            ex = new CommonException(e, code);
+                            ex.setMsg(nMsg);
+                        }
+
+                    } else { //非胶水层
+
+                        /**
+                         * 4.网络错误
+                         */
+                        ex = new CommonException(e, code);
+                    }
 
                 } else {
                     /**
@@ -152,7 +178,8 @@ public abstract class BaseSubscriber<T extends ResBase> extends Subscriber<T> {
                 }
                 if (!ConstantsLib.DEBUG) {
                     ex.setDoNothing(true);
-                    ex.setMsg("");
+                    if (ex.getMsg() == null)
+                        ex.setMsg("");
                 }
                 onUnifiedError(ex);   //未知错误
 
