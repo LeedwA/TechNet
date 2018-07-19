@@ -1,6 +1,5 @@
 package com.ecar.ecarnetwork.http.converter;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.ecar.ecarnetwork.bean.ResBase;
@@ -10,12 +9,10 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
-
-import static com.ecar.ecarnetwork.http.util.ConstantsLib.RESPONES_HEADERNAME;
 
 /**
  * 自定义响应体的转换器
@@ -50,6 +47,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
     @Override
     public T convert(final ResponseBody value) throws IOException {
         ResBase base = null;
+        ArrayList arrayList = null;
         String response = null;
         try {
             response = value.toString();
@@ -60,14 +58,18 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
         }
         Log.i("thread", Thread.currentThread().getName());
         try {
-            base = gson.fromJson(response, type);
+            if (response.startsWith("{")){
+                base = gson.fromJson(response, type);
+            }else {
+                arrayList = gson.fromJson(response, type);
+            }
 //            base.head=value.header(RESPONES_HEADERNAME,"");
 //            base.netCode=value.code();
             /**
              * 保存utv
              */
             if (base == null) {//非成功
-                throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+                throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", (ResBase)base);
             }
         } finally {
             value.close();
@@ -75,7 +77,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
 //        if(base!=null&&!TextUtils.isEmpty(response)){
 //            base.jsonStr=response;
 //        }
-        return (T) base;
+        return (T)(response.startsWith("{")?  base : arrayList);
     }
 
 
