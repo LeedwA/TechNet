@@ -1,5 +1,7 @@
 package com.ecar.ecarnetwork.bean;
 
+import android.app.Activity;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -9,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Administrator
  */
-public class ResBase<T> implements Serializable {
+public class ResBase<T> extends Activity implements Serializable {
 
     @SerializedName("message")
     public String msg;// 错误信息
