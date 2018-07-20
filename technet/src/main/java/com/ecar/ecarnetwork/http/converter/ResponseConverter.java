@@ -6,10 +6,12 @@ import com.ecar.ecarnetwork.bean.ResBase;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.util.TagLibUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -37,17 +39,20 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
 
     private final Gson gson;
     private final Type type;
+    private final Type mArrayType;
 
     ResponseConverter(Gson gson, Type type) {
         this.gson = gson;
         this.type = type;
+        mArrayType = new TypeToken<List<T>>() {
+        }.getType();
     }
 
 
     @Override
     public T convert(final ResponseBody value) throws IOException {
         ResBase base = null;
-        ArrayList arrayList = null;
+        ArrayList<T>  arrayList = null;
         String response = null;
         try {
             response = value.toString();
@@ -58,10 +63,10 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
         }
         Log.i("thread", Thread.currentThread().getName());
         try {
-            if (response.startsWith("{")){
-                base = gson.fromJson(response, type);
+            if (response.startsWith("[")){
+                arrayList =  gson.fromJson(response, mArrayType);
             }else {
-                arrayList = gson.fromJson(response, type);
+                base = gson.fromJson(response, type);
             }
 //            base.head=value.header(RESPONES_HEADERNAME,"");
 //            base.netCode=value.code();
@@ -77,7 +82,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
 //        if(base!=null&&!TextUtils.isEmpty(response)){
 //            base.jsonStr=response;
 //        }
-        return (T)(response.startsWith("{")?  base : arrayList);
+        return (T)(response.startsWith("[")?arrayList: base );
     }
 
 
