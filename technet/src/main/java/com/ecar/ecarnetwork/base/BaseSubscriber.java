@@ -20,7 +20,6 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.List;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
@@ -77,9 +76,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
             } else {
                 this.onUserError(new CommonException(new UserException("请求服务器失败")));
             }
-        } else if (t instanceof List){
-            this.onUserSuccess(t);
-        }else {
+        } else {
             this.onOtherNext(t);
         }
     }
