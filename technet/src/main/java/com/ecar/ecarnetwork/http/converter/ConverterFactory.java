@@ -31,6 +31,7 @@ public class ConverterFactory extends Converter.Factory {
 
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+
         return new ResponseConverter<>(gson, type);
     }
 

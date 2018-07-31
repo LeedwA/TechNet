@@ -3,6 +3,7 @@ package com.ecar.ecarnetwork.http.converter;
 import android.util.Log;
 
 import com.ecar.ecarnetwork.bean.ResBase;
+import com.ecar.ecarnetwork.bean.ResBaseArray;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.util.TagLibUtil;
 import com.google.gson.Gson;
@@ -45,33 +46,41 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
 
     @Override
     public T convert(final ResponseBody value) throws IOException {
+
+        ResBaseArray resArray = null;//
         ResBase base = null;
         String response = null;
         try {
-            response = value.toString();
+            response = value.string();
         } catch (Exception e) {
             e.printStackTrace();
             TagLibUtil.showLogDebug("请求成功，获取返回值失败");
             return null;
         }
+        boolean isArray = response.startsWith("[{"); //是否是纯List
+
         Log.i("thread", Thread.currentThread().getName());
         try {
-            base = gson.fromJson(response, type);
-//            base.head=value.header(RESPONES_HEADERNAME,"");
-//            base.netCode=value.code();
-            /**
-             * 保存utv
-             */
-            if (base == null) {//非成功
-                throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+            if (isArray) {
+                resArray = gson.fromJson(response, type);
+                if (resArray == null) {//解析失败
+                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+                }
+
+            } else {
+                base = gson.fromJson(response, type);
+                if (base == null) {//解析失败
+                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+                }
             }
+
         } finally {
             value.close();
         }
 //        if(base!=null&&!TextUtils.isEmpty(response)){
 //            base.jsonStr=response;
 //        }
-        return (T) base;
+        return isArray ? (T) resArray : (T) base;
     }
 
 

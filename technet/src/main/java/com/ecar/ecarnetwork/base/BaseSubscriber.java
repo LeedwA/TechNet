@@ -5,6 +5,7 @@ import android.net.ParseException;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetwork.bean.ResBase;
+import com.ecar.ecarnetwork.bean.ResBaseArray;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.exception.UserException;
@@ -76,9 +77,21 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
             } else {
                 this.onUserError(new CommonException(new UserException("请求服务器失败")));
             }
+        } else if (t instanceof ResBaseArray) { //纯list处理
+            ResBaseArray base = (ResBaseArray) t;
+            if (base != null) {
+                if (IS_UNCHECK) {
+                    this.onUserSuccess(t);
+                    return;
+                }
+                this.onUserSuccess(t);
+            } else {
+                this.onUserError(new CommonException(new UserException("请求服务器失败")));
+            }
         } else {
             this.onOtherNext(t);
         }
+
     }
 
     protected void onOtherNext(T t) {

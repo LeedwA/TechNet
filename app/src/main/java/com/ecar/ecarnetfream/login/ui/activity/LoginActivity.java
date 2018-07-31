@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 
 import com.ecar.ecarnetfream.R;
+import com.ecar.ecarnetfream.login.AES;
+import com.ecar.ecarnetfream.login.entity.DeviceLoginInfo;
 import com.ecar.ecarnetfream.login.entity.ResLogin;
 import com.ecar.ecarnetfream.login.interfaces.LoginContract;
 import com.ecar.ecarnetfream.login.model.LoginModel;
@@ -19,12 +21,16 @@ import com.ecar.ecarnetfream.publics.base.App;
 import com.ecar.ecarnetfream.publics.base.BaseActivity;
 import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetfream.publics.view.prompt.UpdateDialog;
+import com.ecar.ecarnetwork.base.BaseSubscriber;
+import com.ecar.ecarnetwork.base.manage.RxManage;
 import com.ecar.ecarnetwork.bean.ResBase;
 import com.ecar.ecarnetwork.db.SettingPreferences;
+import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.google.gson.Gson;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import rx.Subscription;
 
 /**
  * Created by Administrator on 2016/1/14.
@@ -74,7 +80,44 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @OnClick(R.id.btn_submit)
     public void onClick() {
 //        TagUtil.showToast(this,"click");
-        presenter.login(etName.getText().toString(), etPwd.getText().toString());
+//        presenter.login(etName.getText().toString(), etPwd.getText().toString());
+        requestUserInfo(this);
+    }
+
+
+    //请求登录信息
+    private void requestUserInfo(Context context) {
+        String snNumber = "ai4insn";
+        BaseSubscriber<DeviceLoginInfo> subscriber = new BaseSubscriber<DeviceLoginInfo>(this, this) {
+            @Override
+            protected void onUserSuccess(DeviceLoginInfo deviceLoginInfo) {
+                if ("200".equals(deviceLoginInfo.code)) {
+                    String encriptStr = deviceLoginInfo.data;
+                    String decriptStr = AES.decode("cwgj123456789011", encriptStr);
+                    DeviceLoginInfo entity = new Gson().fromJson(decriptStr, DeviceLoginInfo.class);
+                    if (entity != null) {
+//                        entity.snNum = snNumber;
+                    }
+                }
+            }
+
+            @Override
+            protected void onUserError(CommonException ex) {
+                super.onUserError(ex);
+            }
+
+
+            @Override
+            protected void onUnifiedError(CommonException ex) {
+                super.onUnifiedError(ex);
+            }
+        };
+
+        //一个请求
+        Subscription subscribe = new LoginModel().
+                getLoginInfoBySn(snNumber).
+                subscribe(subscriber);
+        new RxManage().add(subscribe);//添加到订阅集合中
     }
 
     @Override

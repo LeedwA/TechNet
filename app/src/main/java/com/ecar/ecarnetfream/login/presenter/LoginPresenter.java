@@ -2,10 +2,13 @@ package com.ecar.ecarnetfream.login.presenter;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.text.TextUtils;
 
+import com.ecar.ecarnetfream.login.entity.DeviceLoginInfo;
 import com.ecar.ecarnetfream.login.entity.ResLogin;
 import com.ecar.ecarnetfream.login.interfaces.LoginContract;
+import com.ecar.ecarnetfream.login.model.LoginModel;
 import com.ecar.ecarnetfream.publics.network.Datacenter;
 import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetwork.base.BaseSubscriber;
@@ -14,6 +17,7 @@ import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.UserException;
 import com.ecar.ecarnetwork.util.rx.RxUtils;
+import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
@@ -96,6 +100,8 @@ public class LoginPresenter extends LoginContract.Presenter {
         rxManage.add(subscribe);//添加到订阅集合中
 
     }
+
+
 
     private void rxLogin3(String name, String pwd) {
         //1.订阅者 泛型：最终想要获取的数据类型
