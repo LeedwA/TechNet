@@ -7,9 +7,11 @@ import com.ecar.ecarnetwork.bean.ResBaseArray;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.util.TagLibUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -62,6 +64,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
         Log.i("thread", Thread.currentThread().getName());
         try {
             if (isArray) {
+                Type founderListType = new TypeToken<T>(){}.getType();
                 resArray = gson.fromJson(response, type);
                 if (resArray == null) {//解析失败
                     throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
