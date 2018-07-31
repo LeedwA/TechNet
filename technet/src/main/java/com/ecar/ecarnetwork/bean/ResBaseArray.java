@@ -10,6 +10,6 @@ import java.util.ArrayList;
  *
  * @author Administrator
  */
-public class ResBaseArray<T> extends ArrayList implements Serializable {
+public class ResBaseArray<T> extends ArrayList<T> implements Serializable {
 
 }
