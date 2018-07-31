@@ -49,7 +49,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
     @Override
     public T convert(final ResponseBody value) throws IOException {
 
-//        ResBaseArray resArray = null;//
+        ResBaseArray resArray = null;//
         ResBase base = null;
         String response = null;
         try {
@@ -59,22 +59,22 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
             TagLibUtil.showLogDebug("请求成功，获取返回值失败");
             return null;
         }
-//        boolean isArray = response.startsWith("[{"); //是否是纯List
+        boolean isArray = response.startsWith("[{"); //是否是纯List
 
         Log.i("thread", Thread.currentThread().getName());
         try {
-//            if (isArray) {
-//                resArray = gson.fromJson(response, ype);
-//                if (resArray == null) {//解析失败
-//                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
-//                }
-//
-//            } else {
-            base = gson.fromJson(response, type);
-            if (base == null) {//解析失败
-                throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+            if (isArray) {
+                resArray = gson.fromJson(response, type);
+                if (resArray == null) {//解析失败
+                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+                }
+
+            } else {
+                base = gson.fromJson(response, type);
+                if (base == null) {//解析失败
+                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN, "网络错误", base);
+                }
             }
-//            }
 
         } finally {
             value.close();
@@ -82,8 +82,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
 //        if(base!=null&&!TextUtils.isEmpty(response)){
 //            base.jsonStr=response;
 //        }
-//        return isArray ? (T) resArray : (T) base;
-        return (T) base;
+        return isArray ? (T) resArray : (T) base;
     }
 
 
