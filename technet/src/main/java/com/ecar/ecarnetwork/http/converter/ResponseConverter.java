@@ -7,11 +7,9 @@ import com.ecar.ecarnetwork.bean.ResBaseArray;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
 import com.ecar.ecarnetwork.http.util.TagLibUtil;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -59,7 +57,7 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
             TagLibUtil.showLogDebug("请求成功，获取返回值失败");
             return null;
         }
-        boolean isArray = response.startsWith("[{"); //是否是纯List
+        boolean isArray = response.startsWith("["); //是否是纯List
 
         Log.i("thread", Thread.currentThread().getName());
         try {
