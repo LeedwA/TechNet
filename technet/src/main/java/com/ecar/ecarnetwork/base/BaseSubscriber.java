@@ -159,7 +159,7 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                         if ("400".equals(code)) {  //业务异常 1
                             String response = httpException.response().message();
                             ResBase base = new Gson().fromJson(response, ResBase.class);
-                            ex = new CommonException(httpException, base.code);
+                            ex = new CommonException(httpException, base.errorStatus);
                         }
                         String nMsg = ConstantsLib.serverCodeMap.get(code);
 

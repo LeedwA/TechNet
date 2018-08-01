@@ -14,6 +14,9 @@ public class ResBase<T>  implements Serializable {
     @SerializedName("message")
     public String msg;// 错误信息
 
+    @SerializedName("status")
+    public String errorStatus;// 业务异常错误信息
+
     @SerializedName("sign")
     public String sign;// 簽名
 
