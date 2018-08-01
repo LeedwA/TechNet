@@ -1,7 +1,5 @@
 package com.ecar.ecarnetwork.http.util;
 
-import android.util.ArrayMap;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +8,7 @@ import java.util.Map;
  */
 public class ConstantsLib {
 
-    public static String RESPONES_HEADERNAME = "cwgj_type";//返回的header
+    public static String RESPONES_HEADERNAME = "cwgj-type";//返回的header
     public static String RESPONES_HEADERVALUE = "node-service";//返回的header 值
 
 
