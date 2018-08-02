@@ -17,6 +17,9 @@ import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -149,7 +152,6 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                     HttpException httpException = (HttpException) e;
                     String head = httpException.response().headers().get(ConstantsLib.RESPONES_HEADERNAME);
                     String code = String.valueOf(httpException.code());
-
                     if ("401".equals(String.valueOf(httpException.code()))) {
                         RxBus.getDefault().post(USER_ACESSTOKEN_ERORR);
                     }
@@ -157,8 +159,14 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
                     if (!TextUtils.isEmpty(head) &&
                             head.equals(ConstantsLib.RESPONES_HEADERVALUE)) {
                         if ("400".equals(code)) {  //业务异常 1
-                            String response = httpException.response().message();
-                            ResBase base = new Gson().fromJson(response, ResBase.class);
+                            InputStream inputStream = ((HttpException) e).response().errorBody().byteStream();
+                            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+                            StringBuffer buffer = new StringBuffer();
+                            String line = "";
+                            while ((line = in.readLine()) != null) {
+                                buffer.append(line);
+                            }
+                            ResBase base = new Gson().fromJson(buffer.toString(), ResBase.class);
                             ex = new CommonException(httpException, base.errorStatus);
                         }
                         String nMsg = ConstantsLib.serverCodeMap.get(code);
